@@ -1,0 +1,7 @@
+package function;
+
+public class mixture_classic {
+	public void classic_encrypt(){
+		
+	}
+}

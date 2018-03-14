@@ -1,0 +1,35 @@
+package function;
+
+public class mixture_classic {
+	int k0=4;
+	int k1=6;
+	/*
+	 * info may be a file path or some clear text
+	 */
+	public StringBuffer classic_encrypt(String info,int use_area){
+		StringBuffer encrypt = Affine_Cipher(info);
+		return encrypt;
+	}
+	
+	/*public StringBuffer classic_decrypt() {
+		
+	}*/
+	
+	public StringBuffer change_sit(String cleartext){
+		StringBuffer clear = new StringBuffer(cleartext);
+		return clear;
+	}
+	
+	public StringBuffer Affine_Cipher(String cleartext) {
+		StringBuffer clear = new StringBuffer(cleartext); 
+		System.out.println(clear.length());
+		for(int i=0;i<clear.length();i++){
+			int val = clear.charAt(i);
+			System.out.println(val);
+			//String c = String.valueOf(((val*k1+k0)%128));
+			clear.replace(i, i,c);
+		}
+		System.out.println(clear.toString());
+		return clear;
+	}
+}

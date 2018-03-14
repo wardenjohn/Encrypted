@@ -1,0 +1,139 @@
+package function;
+
+import javax.sql.rowset.FilteredRowSet;
+
+public class mixture_classic {
+	int k0=5;
+	int k1=7;
+	/*
+	 * info may be a file path or some clear text
+	 */
+	public StringBuffer classic_encrypt(String info,int use_area){
+		StringBuffer tem_encrypt = Affine_Cipher(info);
+		StringBuffer encryptd = new StringBuffer();
+		encryptd = change_sit(tem_encrypt.toString());
+		System.out.println(find_inverse(26, 5));
+		return encryptd;
+	}
+	
+	/*public StringBuffer classic_decrypt() {
+		
+	}*/
+	
+	
+	/*
+	 * This function,I use 5 character as one group to change situation.and the left is not a group
+	 */
+	public StringBuffer change_sit(String cleartext){
+		StringBuffer encrypted = new StringBuffer();
+		int group = cleartext.length()/5;   //the number of the group we change sit
+		int pointer=0;//pointer to point out the now character
+		System.out.println(group);
+		for(int i=0;i<group;i++){
+			char t[] = new char[5];
+			for(int j=0;j<5;j++){
+				t[j]=cleartext.charAt(pointer);
+				pointer++;
+			}
+			System.out.println(encrypted);
+			//start to reverse
+			encrypted.append(t[4]);
+			encrypted.append(t[3]);
+			encrypted.append(t[1]);
+			encrypted.append(t[2]);
+			encrypted.append(t[0]);
+		}
+		System.out.println(pointer);
+		System.out.println(encrypted);
+		for(;pointer<cleartext.length();pointer++){
+			encrypted.append(cleartext.charAt(pointer));
+		}
+		System.out.println(encrypted);
+		return encrypted;
+	}
+	
+	public StringBuffer Affine_Cipher(String cleartext) {
+		StringBuffer clear = new StringBuffer(); 
+		for(int i=0;i<cleartext.length();i++){
+			int val = cleartext.charAt(i);
+			val = (val*k1+k0)%94+32;
+			char c = (char)val;
+			clear.append(c);
+			//System.out.println(c);
+		}
+		//System.out.println(clear.toString());
+		return clear;
+	}
+	
+	
+	/*
+	 * The following function is going to decrypt the ciper text
+	 */
+	public StringBuffer restore_sit(String cipertext){
+		StringBuffer clear = new StringBuffer();
+		int group = 0;
+		group = cipertext.length()/5;
+		int pointer = 0;
+		
+		for(int i=0;i<group;i++){
+			char t[] = new char[5];
+			for(int j=0;j<5;j++){
+				t[j] = cipertext.charAt(pointer);
+				pointer++;
+			}
+			clear.append(t[4]);
+			clear.append(t[2]);
+			clear.append(t[3]);
+			clear.append(t[1]);
+			clear.append(t[0]);
+		}
+		/*
+		 * Try another way to en/decrypt
+		 * clear = new StringBuffer(cipertext);
+		 * for(int i=0;i<cipertext.length()/2;i++){
+		 * 		char t;
+		 * 		t=cipertext.charAt(cipertext.length()/2+i);
+		 * 		cipertext.replace(cipertext.length()/2+i,cipertext.length()/2,cipertext.charAt(cipertext.length()/2-i));
+		 * 		cipertext.replace(cipertext.length()/2-i,cipertext.length()/2,t);
+		 * }
+		 */
+		for(;pointer<cipertext.length();pointer++){
+			clear.append(cipertext.charAt(pointer));
+		}
+		return clear;
+	}
+	
+	public int find_inverse(int a,int b){
+		//int a=94;
+		//int b=7;
+		int c=0,d=1;
+		int q=a/b,r=a-q*b;
+		while(r>0){
+			int tem = c-q*d;
+			if(tem>0)
+				tem=tem%a;
+			else
+				tem=(a-tem)%a;
+			c=d;
+			d=tem;
+			a=b;
+			b=r;
+			q=a/b;
+			r=a-q*b;
+		}
+		if(b!=1)
+			return -1;
+		else
+			return d;
+	}
+	
+	public StringBuffer decrypt_Affine(String cipertext) {
+		StringBuffer clear = new StringBuffer();
+		int re_k = find_inverse(); //(j-k0)*rek mod n == c
+		
+		for(int i=0;i<cipertext.length();i++){
+			
+		}
+		return clear;
+	}
+}

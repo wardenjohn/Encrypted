@@ -1,0 +1,23 @@
+package mainwin;
+import java.util.*;
+import javax.swing.*;
+import java.awt.*;
+
+public class window extends JFrame{
+	int height=500;
+	int width=300;
+	int x=100,y=100;
+	public window() {
+		
+	}
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		window win = new window();
+		win.setTitle("加密软件");
+		win.setBounds(x, y, width, height);
+		win.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		win.show();
+	}
+
+}

@@ -1,0 +1,237 @@
+package mainwin;
+import java.util.*;
+import javax.swing.*;
+import java.awt.*;
+import function.*;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import mainwin.filewindow;
+
+/*
+ * 帮助按钮 后期完善，button ： teach
+ */
+public class window extends JFrame{
+	int height=700;
+	int width=800;
+	int x=100;
+	int y=50;
+	private JTextField filename_in;
+	private JTextField filename_out;
+	private StringBuffer filepath_in;
+	private StringBuffer filepath_out;
+	private JTextArea cleartext;
+	private JTextArea ciphertext;
+	int use_area=0;
+	int choosen_function=0;
+	/*
+	 * In this function , all the start up function of the main window is all written here . If you want to maintain it , try to find it here!
+	 */
+	public window() {
+		
+		setBounds(x, y, width, height);
+		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		JLabel file_out = new JLabel("选择导入文件：");
+		file_out.setBounds(66, 601, 91, 16);
+		
+		filename_in = new JTextField();
+		filename_in.setBounds(169, 596, 431, 26);
+		filename_in.setColumns(10);
+		
+		JLabel file_in = new JLabel("选择导出文件：");
+		file_in.setBounds(66, 639, 91, 16);
+		
+		filename_out = new JTextField();
+		filename_out.setBounds(169, 634, 431, 26);
+		filename_out.setColumns(10);
+		getContentPane().setLayout(null);
+		getContentPane().add(file_in);
+		getContentPane().add(filename_out);
+		getContentPane().add(file_out);
+		getContentPane().add(filename_in);
+		
+		JButton choosefile_in = new JButton("选择文件");
+		choosefile_in.setBounds(633, 596, 117, 29);
+		getContentPane().add(choosefile_in);
+		choosefile_in.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				filewindow cf_in = new filewindow();
+				filepath_in=cf_in.choose_file();
+				filename_in.setText(filepath_in.toString());
+			}
+		});
+		
+		JButton choosefile_out = new JButton("选择文件");
+		choosefile_out.setBounds(633, 634, 117, 29);
+		getContentPane().add(choosefile_out);
+		choosefile_out.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				filewindow cf_out = new filewindow();
+				filepath_out = cf_out.choose_file();
+				filename_out.setText(filepath_out.toString());
+			}
+		});
+		
+		JScrollPane js1 = new JScrollPane();
+		
+		cleartext = new JTextArea();
+		cleartext.setBounds(65, 100, 264, 449);
+		//getContentPane().add(cleartext);
+		js1.add(cleartext);
+		getContentPane().add(js1);
+		
+		JScrollBar scrollBar = new JScrollBar();
+		cleartext.add(scrollBar);
+		
+		JLabel clear_lable = new JLabel("请输入明文：");
+		clear_lable.setBounds(66, 63, 91, 16);
+		getContentPane().add(clear_lable);
+		
+		JLabel nonclear_lable = new JLabel("输出密文：");
+		nonclear_lable.setBounds(360, 63, 81, 16);
+		getContentPane().add(nonclear_lable);
+		
+		ciphertext = new JTextArea();
+		ciphertext.setBounds(360, 100, 272, 449);
+		getContentPane().add(ciphertext);
+		
+		JButton start = new JButton("开始工作");
+		start.setBounds(661, 58, 117, 29);
+		getContentPane().add(start);
+		start.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				//This is the main start function entrance
+				start_working();
+			}
+		});
+		
+		JButton clear_are = new JButton("清除");
+		clear_are.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				ciphertext.setText("");
+				cleartext.setText("");
+			}
+		});
+		clear_are.setBounds(661, 100, 117, 29);
+		getContentPane().add(clear_are);
+		
+		JRadioButton classic = new JRadioButton("古典加密法");
+		classic.setBounds(653, 151, 141, 23);
+		getContentPane().add(classic);
+		classic.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				choosen_function=1;
+			}
+		});
+		
+		JRadioButton radioButton_1 = new JRadioButton("其他");
+		radioButton_1.setBounds(653, 186, 141, 23);
+		getContentPane().add(radioButton_1);
+		radioButton_1.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				choosen_function=2;
+			}
+		});
+		
+		ButtonGroup bg = new ButtonGroup();
+		bg.add(radioButton_1);
+		bg.add(classic);
+		
+		JButton teach = new JButton("使用说明");
+		teach.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		teach.setBounds(661, 520, 117, 29);
+		getContentPane().add(teach);
+		
+		JRadioButton usefile = new JRadioButton("使用文件");
+		usefile.setBounds(62, 20, 97, 23);
+		getContentPane().add(usefile);
+		usefile.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				use_area=1;
+			}
+		});
+		
+		JRadioButton nofile = new JRadioButton("不使用文件，输入明文");
+		nofile.setBounds(169, 20, 173, 23);
+		getContentPane().add(nofile);
+		nofile.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				use_area=2;
+			}
+		});
+		
+		ButtonGroup is_file = new ButtonGroup();
+		is_file.add(usefile);
+		is_file.add(nofile);
+	}
+	/*
+	 * This function is to show the helping window
+	 */
+	public void help(){
+		
+	}
+
+	/*
+	 * This function is the running function , aiming to get use of different encrypt function
+	 */
+	public void start_working(){
+		System.out.println(use_area);
+		if(use_area == 0){
+			JOptionPane.showConfirmDialog(null, "请选择明文输入方法！", "Wrong !", JOptionPane.ERROR_MESSAGE);
+		}
+		if(choosen_function == 0){
+			JOptionPane.showConfirmDialog(null, "请选择加密方法！", "Wrong !", JOptionPane.ERROR_MESSAGE);
+		}
+		else if (choosen_function == 1) {
+			if(use_area == 2){// it means that the clear text are input from the Text Area
+				System.out.println("inside");
+				mixture_classic classic = new mixture_classic();
+				StringBuffer encrypted = classic.classic_encrypt(cleartext.getText(), use_area);
+				ciphertext.setText(encrypted.toString());
+			}
+			else{
+				
+			}
+		}
+		else {
+			
+		}
+	}
+	public static void main(String[] args) {
+		int height=700;
+		int width=800;
+		int x=100;
+		int y=50;
+		// TODO Auto-generated method stub
+		window win = new window();
+		win.setTitle("加密软件");
+
+		win.show();
+	}
+}

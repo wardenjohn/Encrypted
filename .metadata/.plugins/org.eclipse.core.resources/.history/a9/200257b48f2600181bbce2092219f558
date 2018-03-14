@@ -1,0 +1,66 @@
+package function;
+
+import javax.sql.rowset.FilteredRowSet;
+
+public class mixture_classic {
+	int k0=5;
+	int k1=7;
+	/*
+	 * info may be a file path or some clear text
+	 */
+	public StringBuffer classic_encrypt(String info,int use_area){
+		StringBuffer tem_encrypt = Affine_Cipher(info);
+		StringBuffer encryptd = new StringBuffer();
+		encryptd = change_sit(tem_encrypt.toString());
+		return encryptd;
+	}
+	
+	/*public StringBuffer classic_decrypt() {
+		
+	}*/
+	
+	
+	/*
+	 * This function,I use 5 character as one group to change situation.and the left is not a group
+	 */
+	public StringBuffer change_sit(String cleartext){
+		StringBuffer encrypted = new StringBuffer();
+		int group = cleartext.length()/5;   //the number of the group we change sit
+		int pointer=0;//pointer to point out the now character
+		System.out.println(group);
+		for(int i=0;i<group;i++){
+			char t[] = new char[5];
+			for(int j=0;j<5;j++){
+				t[j]=cleartext.charAt(pointer);
+				pointer++;
+			}
+			System.out.println(encrypted);
+			//start to reverse
+			encrypted.append(t[4]);
+			encrypted.append(t[3]);
+			encrypted.append(t[1]);
+			encrypted.append(t[2]);
+			encrypted.append(t[0]);
+		}
+		System.out.println(pointer);
+		System.out.println(encrypted);
+		for(;pointer<cleartext.length();pointer++){
+			encrypted.append(cleartext.charAt(pointer));
+		}
+		System.out.println(encrypted);
+		return encrypted;
+	}
+	
+	public StringBuffer Affine_Cipher(String cleartext) {
+		StringBuffer clear = new StringBuffer(); 
+		for(int i=0;i<cleartext.length();i++){
+			int val = cleartext.charAt(i);
+			val = (val*k1+k0)%94+32;
+			char c = (char)val;
+			clear.append(c);
+			//System.out.println(c);
+		}
+		//System.out.println(clear.toString());
+		return clear;
+	}
+}
