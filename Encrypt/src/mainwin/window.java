@@ -251,7 +251,6 @@ public class window extends JFrame{
 		}
 		else if (choosen_function == 1) {
 			if(use_area == 2){// it means that the clear text are input from the Text Area
-				System.out.println("inside");
 				mixture_classic classic = new mixture_classic();
 				StringBuffer encrypted = classic.classic_encrypt(cleartext.getText(), use_area);
 				ciphertext.setText(encrypted.toString());
@@ -273,8 +272,10 @@ public class window extends JFrame{
 			JOptionPane.showConfirmDialog(null, "请选择加密方法！", "Wrong !", JOptionPane.ERROR_MESSAGE);
 		}
 		else if(choosen_function == 1){
-			if(use_area == 2){
-				
+			if(use_area == 2){// it means that the clear text are input from the Text Area
+				mixture_classic classic = new mixture_classic();
+				StringBuffer clear = classic.classic_decrypt(ciphertext.getText(), use_area);
+				cleartext.setText(clear.toString());
 			}else{
 				
 			}

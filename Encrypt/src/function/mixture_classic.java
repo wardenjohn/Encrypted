@@ -5,8 +5,9 @@ import javax.sql.rowset.FilteredRowSet;
  * 解方程的问题，主要在得到了逆以后，需要解密，这里卡住了
  */
 public class mixture_classic {
-	int k0=5;
+	int k0=3;
 	int k1=7;
+	int n=26;
 	int s,t;
 	/*
 	 * info may be a file path or some clear text
@@ -15,13 +16,14 @@ public class mixture_classic {
 		StringBuffer tem_encrypt = Affine_Cipher(info);
 		StringBuffer encryptd = new StringBuffer();
 		encryptd = change_sit(tem_encrypt.toString());
-		System.out.println(find_reverse(7, 26)+"thiss");
 		return encryptd;
 	}
 	
-	/*public StringBuffer classic_decrypt() {
-		
-	}*/
+	public StringBuffer classic_decrypt(String info , int use_area) {
+		StringBuffer tem_decrypt = restore_sit(info);
+		StringBuffer clear = decrypt_Affine(tem_decrypt.toString());
+		return clear;
+	}
 	
 	
 	/*
@@ -31,14 +33,14 @@ public class mixture_classic {
 		StringBuffer encrypted = new StringBuffer();
 		int group = cleartext.length()/5;   //the number of the group we change sit
 		int pointer=0;//pointer to point out the now character
-		System.out.println(group);
+
 		for(int i=0;i<group;i++){
 			char t[] = new char[5];
 			for(int j=0;j<5;j++){
 				t[j]=cleartext.charAt(pointer);
 				pointer++;
 			}
-			System.out.println(encrypted);
+
 			//start to reverse
 			encrypted.append(t[4]);
 			encrypted.append(t[3]);
@@ -46,12 +48,9 @@ public class mixture_classic {
 			encrypted.append(t[2]);
 			encrypted.append(t[0]);
 		}
-		System.out.println(pointer);
-		System.out.println(encrypted);
 		for(;pointer<cleartext.length();pointer++){
 			encrypted.append(cleartext.charAt(pointer));
 		}
-		System.out.println(encrypted);
 		return encrypted;
 	}
 	
@@ -59,12 +58,11 @@ public class mixture_classic {
 		StringBuffer clear = new StringBuffer(); 
 		for(int i=0;i<cleartext.length();i++){
 			int val = cleartext.charAt(i);
-			val = (val*k1+k0)%94+32;
+			val = (val*k1+k0)%n+32;
+			System.out.println("encrypted  :  "+val);
 			char c = (char)val;
 			clear.append(c);
-			//System.out.println(c);
 		}
-		//System.out.println(clear.toString());
 		return clear;
 	}
 	
@@ -106,44 +104,57 @@ public class mixture_classic {
 		return clear;
 	}
 	
-	public int caculate_inverse(int a,int b){
-		int r1 = a, r2 = b , s1 = 1, s2 = 0, t1 = 0, t2 = 1;//初始化
-	    int q,r;     
-	    while(r2 > 0)    
-	    {    
-	        q = r1 / r2;    
-	 
-	        r = r1 - q * r2; //也就是r = r1%r2;    
-	        r1 = r2;    
-	        r2 = r;    
-	    
-	        s = s1 - q * s2;    
-	        s1 = s2;    
-	        s2 = s;    
-	          
-	        t = t1 - q * t2;    
-	        t1 = t2;    
-	        t2 = t;     
-	    }    
-	    //gcd(a,b) = r1;     
-	    s = s1;     
-	    t = t1; 
-	    return 0;
+	public int caculate_inverse(int r0,int r1){//r0 = n
+		int a=r0,b=r1;
+		int c=0,d=1;
+		int q=a/b,r=a-q*b;
+		while(r>0){
+			int temp=c-q*d;
+			if(temp>0)
+				temp=temp%a;
+			else
+				temp=(n+temp)%a;
+			c=d;
+			d=temp;
+			a=b;
+			b=r;
+			q=a/b;
+			r=a-q*b;
+		}
+		if(b!=1)
+			return 0;
+		else
+			return d;
 	}
 	
 	public int find_reverse(int a,int n) {
-		caculate_inverse(n, a);
-		int ans = (t >= 0) ? (t % n) : ((t-t*n)%n);
+		int ans = caculate_inverse(n, a);
+		//int ans = (t >= 0) ? (t % n) : ((t-t*n)%n);
+		System.out.println("reverse is :"+ans);
 		return ans;
 	}
 	
+	/*
+	 * *m_str = (_a(逆元)*(*m_str - b + n))%n;//解密核心算法  
+	 * */
 	public StringBuffer decrypt_Affine(String cipertext) {
 		StringBuffer clear = new StringBuffer();
-		int re_k = find_reverse(5,26); //(j-k0)*rek mod n == c
-		
+		//int n=94;
+		int re_k = find_reverse(k1,n); //(j-k0)*rek mod n == c
+		 System.out.println(re_k+"???");
 		for(int i=0;i<cipertext.length();i++){
-			
+			int tem = (int)cipertext.charAt(i);
+			tem -=32;
+			//tem = (re_k * (tem - k0 + n))%n;
+			tem = ((tem-k0)*re_k)%n;
+			System.out.println(tem);
+			clear.append((char)(tem));
 		}
 		return clear;
 	}
 }
+
+
+/*
+ * 计算的问题，但是到底是求逆元的时候出错了还是在求解的时候出错了还是需要想想
+ * */
