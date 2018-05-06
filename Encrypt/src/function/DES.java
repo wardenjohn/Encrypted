@@ -12,37 +12,25 @@ import java.io.*;
 import java.math.*;
 
 public class DES {
-	String password="958802288";
-	
-	
-	public byte[] decryptFun(String inputfile){
+	String password="95880228";
+	String algorithm="DES";
+	SecretKey DESkey;
+	public byte[] decryptFun(byte[] cipertext){
 		try{
-
-//			BufferedReader in_ciper = new BufferedReader(new InputStreamReader(new FileInputStream(inputfile)));
-//			StringBuffer content = new StringBuffer();
-//			String s="";
-//			
-//			while((s=in_ciper.readLine())!=null){
-//				content.append(s);
-//			}
-//			in_ciper.close();
-//			String cipertext = content.toString();
 			
-			FileInputStream inputStream = new FileInputStream(new File(inputfile));
-			ByteArrayOutputStream out = new ByteArrayOutputStream(1024);
-			int size=0;
-			byte[] cipertext = new byte[1024];
-			while((size = inputStream.read(cipertext))!=-1){
-				
+			//use the ciper text in a byte type from the father function
+			if(!(new File("DESkey.dat")).exists()){
+				System.out.println("can not find the DES key!");
+				return null;
 			}
-			System.out.println(cipertext);
-			SecureRandom random = new SecureRandom();
-			DESKeySpec deskey = new DESKeySpec(password.getBytes());
-			SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
-			SecretKey secretkey=keyFactory.generateSecret(deskey);
-			Cipher cipher = Cipher.getInstance("DES");
-			cipher.init(Cipher.DECRYPT_MODE, secretkey,random);
-			
+			else{
+				ObjectInputStream in = new ObjectInputStream(new FileInputStream("DESkey.dat"));
+				DESkey = (SecretKey)in.readObject();
+				in.close();
+			}
+			Cipher cipher = Cipher.getInstance(algorithm);
+			cipher.init(Cipher.DECRYPT_MODE, DESkey);
+			//System.out.println("decrypt string:"+cipertext.toString());
 			return  cipher.doFinal(cipertext);
 		}catch (Exception e) {
 			// TODO: handle exception
@@ -50,6 +38,44 @@ public class DES {
 		}
 		return null;
 	}
+	public byte[] encrypt(String input)
+	{
+		try{
+			BufferedReader in_clear = new BufferedReader(new InputStreamReader(new FileInputStream(input)));
+			StringBuffer content = new StringBuffer();
+			String s="";
+			while((s=in_clear.readLine())!=null){
+				content.append(s);
+			}
+			in_clear.close();
+			
+			String cleartext=content.toString();
+			if(!(new File("DESkey.dat")).exists()){
+				System.out.println("creating DES key");
+				KeyGenerator keygen=KeyGenerator.getInstance(algorithm);
+				DESkey = keygen.generateKey();
+				
+				ObjectOutputStream outputStream = new ObjectOutputStream(new FileOutputStream("DESkey.dat"));
+				outputStream.writeObject(DESkey);
+				outputStream.close();
+			}
+			else{
+				System.out.println("read DES key");
+				ObjectInputStream in = new ObjectInputStream(new FileInputStream("DESkey.dat"));
+				DESkey = (SecretKey)in.readObject();
+				in.close();
+			}
+			Cipher c1=Cipher.getInstance(algorithm);
+			c1.init(Cipher.ENCRYPT_MODE, DESkey);
+			
+			return c1.doFinal(cleartext.getBytes());
+		}catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	
 	public byte[] encryptFun(String inputfile) {
 		try{
@@ -71,7 +97,7 @@ public class DES {
 			SecretKey secrekey=keyFactory.generateSecret(deskey);
 			
 			//use ciper object to encrypt
-			Cipher cipher=Cipher.getInstance("DES");
+			Cipher cipher=Cipher.getInstance(algorithm);
 			cipher.init(Cipher.ENCRYPT_MODE, secrekey,random);
 			
 			return cipher.doFinal(cleartext.getBytes());
@@ -83,8 +109,33 @@ public class DES {
 		return null;
 	}
 	
+	public byte[] readInbyte(String inputname)
+	{
+		try{
+			File file = new File(inputname);
+			FileInputStream in = new FileInputStream(file);
+			long filesize = file.length();
+			byte[] readin = new byte[(int)filesize];
+			
+			int offset=0;
+			int numRead=0;
+			
+			while(offset<readin.length&&(numRead = in.read(readin, offset, readin.length-offset))>=0){
+				offset+=numRead;
+			}
+			if(offset!=readin.length){
+				throw new IOException("can not read completely of file :"+file.getName());
+			}
+			in.close();
+			return readin;
+		}catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
 		System.out.println("Please select the running mode:");
 		System.out.println("1.encrypt");
 		System.out.println("2.decrypt");
@@ -99,9 +150,11 @@ public class DES {
 			String input=scanner.nextLine();
 			System.out.println("Input the ciper file name");
 			String cipername=scanner.nextLine();
-			byte[] ciper = des.encryptFun(input);
+			byte[] ciper = des.encrypt(input);
 			//System.out.println(ciper.toString());
 			System.out.println(ciper);
+			
+			//write the byte from the ciper into a document
 			try{
 				FileOutputStream out = new FileOutputStream(new File(cipername));
 				out.write(ciper);
@@ -110,17 +163,20 @@ public class DES {
 				// TODO: handle exception
 				e.printStackTrace();
 			}
+			System.out.println("des decrypt"+new String(des.decryptFun(ciper)));
 			break;
+		
 		}
-		case 2:{
+			case 2:{
 			System.out.println("Input the decrypt file");
 			scanner.nextLine();
 			String input = scanner.nextLine();
 			System.out.println("Input the plain text name");
 			String outname = scanner.nextLine();
 			
-			byte[] clear = des.decryptFun(input);
-			System.out.println(clear.toString());
+			byte[] clear = des.readInbyte(input);
+			clear = des.decryptFun(clear);
+			System.out.println("decrypt content:  "+new String(clear));
 			try{
 				FileOutputStream outputStream = new FileOutputStream(new File(outname));
 				outputStream.write(clear);
@@ -134,7 +190,5 @@ public class DES {
 		default:
 			break;
 		}
-	}
-
-	
+	}	
 }

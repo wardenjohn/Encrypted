@@ -13,15 +13,11 @@
 <fullyQualifiedTypeName name="java.security.KeyPairGenerator"/>
 <fullyQualifiedTypeName name="java.security.KeyPair"/>
 <fullyQualifiedTypeName name="java.security.PrivateKey"/>
-<fullyQualifiedTypeName name="java.io.OutputStreamWriter"/>
-<fullyQualifiedTypeName name="java.io.FileOutputStream"/>
 <fullyQualifiedTypeName name="java.security.PublicKey"/>
 <fullyQualifiedTypeName name="java.io.ObjectOutputStream"/>
 <fullyQualifiedTypeName name="java.io.ObjectInputStream"/>
 <fullyQualifiedTypeName name="java.security.interfaces.RSAPublicKey"/>
 <fullyQualifiedTypeName name="java.security.interfaces.RSAPrivateCrtKey"/>
-<fullyQualifiedTypeName name="java.io.BufferedWriter"/>
-<fullyQualifiedTypeName name="java.io.File"/>
 <fullyQualifiedTypeName name="java.math.BigInteger"/>
 <fullyQualifiedTypeName name="function.RSA"/>
 <fullyQualifiedTypeName name="java.util.Scanner"/>
@@ -36,7 +32,14 @@
 <fullyQualifiedTypeName name="javax.crypto.Cipher"/>
 <fullyQualifiedTypeName name="java.io.BufferedReader"/>
 <fullyQualifiedTypeName name="java.io.InputStreamReader"/>
-<fullyQualifiedTypeName name="java.io.FileInputStream"/>
 <fullyQualifiedTypeName name="java.lang.StringBuffer"/>
+<fullyQualifiedTypeName name="javax.crypto.spec.DESKeySpec"/>
+<fullyQualifiedTypeName name="java.io.BufferedWriter"/>
+<fullyQualifiedTypeName name="java.io.OutputStreamWriter"/>
+<fullyQualifiedTypeName name="java.util.Base64"/>
 <fullyQualifiedTypeName name="java.lang.String"/>
+<fullyQualifiedTypeName name="java.io.FileInputStream"/>
+<fullyQualifiedTypeName name="java.io.FileOutputStream"/>
+<fullyQualifiedTypeName name="java.io.File"/>
+<fullyQualifiedTypeName name="java.io.ByteArrayOutputStream"/>
 </qualifiedTypeNameHistroy>
